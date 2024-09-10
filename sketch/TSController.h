@@ -3,7 +3,7 @@
 #ifndef TSCONTROLLER_H
 #define TSCONTROLLER_H
 
-
+#include <Arduino.h>
 #include <MCUFRIEND_kbv.h>  // Biblioteca MCUFRIEND_kbv
 #include <TouchScreen.h>   // Biblioteca para touchscreen
 
@@ -14,13 +14,6 @@ struct TextInfo{
 };
 
 struct TSController{
-  // Definição dos pinos do TFT
-  static const int LCD_CS     = A3;
-  static const int LCD_CD     = A2;
-  static const int LCD_WR     = A1;
-  static const int LCD_RD     = A0;
-  static const int LCD_RESET  = A4;
-
   // Definição dos pinos do touchscreen
   static const int TS_XP  = 8;  // Substitua pelo pino correto
   static const int TS_YP  = A3;  // Substitua pelo pino correto
@@ -38,8 +31,11 @@ struct TSController{
 
   // Criação do objeto TFT
   static MCUFRIEND_kbv tft;
+  //static Adafruit_TFTLCD tft;
   
   static void init();
+
+  //draw centered text based on central point or screen center if not specified
   static TextInfo TSController::drawCenteredText(const char* text, int y = 0, float centerX = TSController::tft.width() / 2, int textSize = 2, int color = TFT_WHITE);
 };
 

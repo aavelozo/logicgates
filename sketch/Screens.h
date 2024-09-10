@@ -1,16 +1,14 @@
 #ifndef SCREENS_H
 #define SCREENS_H
 
-#import "ScreenInitialMenu.h";
-#import "ScreenLearning.h";
+#include "BaseScreen.h";
+#include <StackArray.h>
 
 struct Screens {
-  static ScreenInitialMenu* initial;
-  static ScreenLearning* learning;
-  static BaseScreen* currentScreen;
-  static BaseScreen* get(char* varName);
+  static StackArray <byte> stack;
+  static BaseScreen* currentScreen;  
+  static void goTo(byte screenId);    
+  static void goBack();
 };
 
-
-
-#endif SCREENS_H
+#endif //SCREENS_H

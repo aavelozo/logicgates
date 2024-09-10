@@ -4,7 +4,7 @@
 #include "BaseScreen.h";
 
 struct BaseScreen{
-  void drawBackButton(BaseScreen* screen);
+  void drawBackButton();
   virtual void draw();
 };
 

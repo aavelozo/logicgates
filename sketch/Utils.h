@@ -11,4 +11,6 @@ struct UIPoint{
   int x,y;
 };
 
+float getArcAngle(float corda, float raio);
+
 #endif // UTILS_H

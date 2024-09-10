@@ -1,28 +1,57 @@
 #include "Screens.h";
 #include <Arduino.h>;
+#include <StackArray.h>
 #include "BaseScreen.h";
+#include "ScreenInitialMenu.h";
+#include "ScreenLearning.h";
+#include "ScreenPort.h";
 
-ScreenInitialMenu* Screens::initial = nullptr;
-ScreenLearning* Screens::learning = nullptr;
+
+//STATIC INITIALIZATIONS
 BaseScreen* Screens::currentScreen = nullptr;
+StackArray <byte> Screens::stack;
 
-static BaseScreen* Screens::get(char* varName) {    
-  Serial.println("getting screen " + String(varName));
-  if (varName == "initial") {
-    Serial.println("is initial");
-    if (Screens::initial == nullptr) {
-      Serial.println("is null");
-      Screens::initial = new ScreenInitialMenu();
-      Serial.println("returning initial");
-      return initial;
-    } else {
-      Serial.println("is not null");
-    };
-  } else if (varName == "learning") {
-    if (learning == nullptr) {
-      Screens::learning = new ScreenLearning();
-      return learning;
-    };
+
+//navigate to screen by id
+static void Screens::goTo(byte screenId) {    
+  Serial.print("going screen ");
+  Serial.println(screenId);
+
+  //clear memory
+  if (currentScreen != nullptr) {
+    delete currentScreen;
+    currentScreen = nullptr;
+  }    
+
+  //find screen by id
+  if (screenId == ScreenInitialMenu::SCREEN_ID) {
+    currentScreen = new ScreenInitialMenu();
+  } else if (screenId == ScreenLearning::SCREEN_ID) {
+    currentScreen = new ScreenLearning();
+  } else if (screenId == ScreenPort::SCREEN_ID) {
+    currentScreen = new ScreenPort();
   };
-  return nullptr;
+
+  if (currentScreen != nullptr) {
+
+    //add to stack if is not on top
+    if (!stack.isEmpty()) {
+      if (stack.peek() != screenId) {
+        stack.push(screenId);
+      }
+    } else {
+      stack.push(screenId);
+    }
+
+    //screen draw
+    currentScreen->draw();
+  } else {
+    Serial.println("screen not found: " + String(screenId));
+  }
 };
+
+//navigate to previous screen on stack
+static void Screens::goBack() {
+  stack.pop();
+  Screens::goTo(stack.peek());
+}

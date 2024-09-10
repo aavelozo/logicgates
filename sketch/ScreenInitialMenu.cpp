@@ -5,6 +5,7 @@
 #include "ScreenLearning.h";
 #include "Screens.h";
 
+//draw menus items inciais
 void ScreenInitialMenu::drawMenuItem(float itemMenuXPos,float itemMenuYPos,float itemR,int colorExtern,const char* text = "Opção"){
   TSController::tft.drawCircle(itemMenuXPos,itemMenuYPos,itemR,colorExtern);
   TSController::tft.drawCircle(itemMenuXPos,itemMenuYPos,itemR-1,colorExtern);
@@ -34,28 +35,29 @@ void ScreenInitialMenu::drawMenuItem(float itemMenuXPos,float itemMenuYPos,float
   TSController::drawCenteredText(text,itemMenuYPos+itemR+20,p1.x);
 };
 
-
 void ScreenInitialMenu::draw() {
-    BaseScreen::draw();
-    TSController::tft.fillScreen(TFT_BLACK);  // Limpa a tela
-    TSController::tft.setTextColor(TFT_WHITE);
-    TSController::tft.setTextSize(2);
-    TSController::tft.setCursor(10, 10);
-    TextInfo ti = TSController::drawCenteredText("PORTAS E CIRCUITOS");
-    TSController::tft.drawRect(5, ti.h+10, TSController::tft.width() - 10, TSController::tft.height() - (ti.h+10), TFT_WHITE);
-    ti = TSController::drawCenteredText("Modos de jogo",ti.h+20);
-    float _4Div = TSController::tft.width() / 4;
-    float itemMenuXPos = _4Div / 2;
-    float itemMenuYPos = TSController::tft.height() / 2;
-    float itemR = itemMenuXPos * 0.6;
-    drawMenuItem(itemMenuXPos, itemMenuYPos,itemR,TFT_YELLOW,"Aprenda");
-    drawMenuItem(itemMenuXPos + _4Div, itemMenuYPos,itemR,TFT_BLUE,"Pontuacao");
-    drawMenuItem(itemMenuXPos + _4Div * 2, itemMenuYPos,itemR,TFT_GREEN,"Tempo");
-    drawMenuItem(itemMenuXPos + _4Div * 3, itemMenuYPos,itemR,TFT_RED,"Construa");  
+  Serial.println("INIT ScreenInitialMenu::draw");
+  TSController::tft.fillScreen(TFT_BLACK);  // Limpa a tela
+  TSController::tft.setTextColor(TFT_WHITE);
+  TSController::tft.setTextSize(2);
+  TSController::tft.setCursor(10, 10);
+  TextInfo ti = TSController::drawCenteredText("PORTAS E CIRCUITOS");
+  TSController::tft.drawRect(5, ti.h+10, TSController::tft.width() - 10, TSController::tft.height() - (ti.h+10), TFT_WHITE);
+  ti = TSController::drawCenteredText("Modos de jogo",ti.h+20);
+  float _4Div = TSController::tft.width() / 4;
+  float itemMenuXPos = _4Div / 2;
+  float itemMenuYPos = TSController::tft.height() / 2;
+  float itemR = itemMenuXPos * 0.6;
+  drawMenuItem(itemMenuXPos, itemMenuYPos,itemR,TFT_YELLOW,"Aprenda");
+  drawMenuItem(itemMenuXPos + _4Div, itemMenuYPos,itemR,TFT_BLUE,"Pontuacao");
+  drawMenuItem(itemMenuXPos + _4Div * 2, itemMenuYPos,itemR,TFT_GREEN,"Tempo");
+  drawMenuItem(itemMenuXPos + _4Div * 3, itemMenuYPos,itemR,TFT_RED,"Construa");  
 
-    EventReceptor* ev = new EventReceptor(itemMenuXPos,itemMenuYPos,itemR);
-    ev->onClick = [](){
-      clearAllEventReceptors();
-      Screens::get("learning")->draw();
-    };
+  EventReceptor* ev = new EventReceptor(itemMenuXPos,itemMenuYPos,itemR);
+  ev->onClick = [](){
+    Serial.println("IN ON CLICK OF INITIAL SCREEN (LEARNING)");
+    clearAllEventReceptors();
+    Screens::goTo(ScreenLearning::SCREEN_ID);
   };
+  Serial.println("END ScreenInitialMenu::draw");
+};
