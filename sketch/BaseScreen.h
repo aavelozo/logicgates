@@ -1,11 +1,11 @@
 #ifndef BASESCREEN_H
 #define BASESCREEN_H
 
-#include "BaseScreen.h";
+#include "BaseScreen.h"
 
 struct BaseScreen{
   void drawBackButton();
-  virtual void draw();
+  virtual void draw(char* params[] = nullptr);
 };
 
 #endif //BASESCREEN_H

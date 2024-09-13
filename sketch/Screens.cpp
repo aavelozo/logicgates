@@ -1,10 +1,11 @@
-#include "Screens.h";
-#include <Arduino.h>;
+#include "Screens.h"
+#include <Arduino.h>
 #include <StackArray.h>
-#include "BaseScreen.h";
-#include "ScreenInitialMenu.h";
-#include "ScreenLearning.h";
-#include "ScreenPort.h";
+#include "BaseScreen.h"
+#include "ScreenInitialMenu.h"
+#include "ScreenLearning.h"
+#include "ScreenPort.h"
+#include "EVRcpt.h"
 
 
 //STATIC INITIALIZATIONS
@@ -13,26 +14,30 @@ StackArray <byte> Screens::stack;
 
 
 //navigate to screen by id
-static void Screens::goTo(byte screenId) {    
+void Screens::goTo(byte screenId,char* params[]) {      
   Serial.print("going screen ");
   Serial.println(screenId);
 
-  //clear memory
-  if (currentScreen != nullptr) {
-    delete currentScreen;
-    currentScreen = nullptr;
-  }    
+  BaseScreen* newScreen = nullptr;
 
   //find screen by id
   if (screenId == ScreenInitialMenu::SCREEN_ID) {
-    currentScreen = new ScreenInitialMenu();
+    newScreen = new ScreenInitialMenu();
   } else if (screenId == ScreenLearning::SCREEN_ID) {
-    currentScreen = new ScreenLearning();
+    newScreen = new ScreenLearning();
   } else if (screenId == ScreenPort::SCREEN_ID) {
-    currentScreen = new ScreenPort();
+    newScreen = new ScreenPort();
   };
 
-  if (currentScreen != nullptr) {
+  if (newScreen != nullptr) {    
+
+    //clear memory
+    clearAllEVRcpts();
+    if (currentScreen != nullptr) {
+      delete currentScreen;
+      currentScreen = nullptr;
+    }
+    currentScreen = newScreen;
 
     //add to stack if is not on top
     if (!stack.isEmpty()) {
@@ -44,14 +49,14 @@ static void Screens::goTo(byte screenId) {
     }
 
     //screen draw
-    currentScreen->draw();
+    currentScreen->draw(params);
   } else {
     Serial.println("screen not found: " + String(screenId));
   }
 };
 
 //navigate to previous screen on stack
-static void Screens::goBack() {
+void Screens::goBack(char* params[]) {
   stack.pop();
-  Screens::goTo(stack.peek());
+  Screens::goTo(stack.peek(),params);
 }

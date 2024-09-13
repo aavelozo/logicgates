@@ -1,19 +1,17 @@
-#include "BaseScreen.h";
-#include "TSController.h";
-#include "EventReceptor.h";
-#include "Screens.h";
+#include "BaseScreen.h"
+#include "SCtrl.h"
+#include "EVRcpt.h"
+#include "Screens.h"
 
 //back button
 void BaseScreen::drawBackButton(){
-  int px = 5;
-  int py = 2;
-  int size = 22;
-  TSController::tft.fillRoundRect(px,py,size,size,3,TFT_DARKGREY);
-  TSController::drawCenteredText("<",py+5, px+((size-px)/2));
-  EventReceptor* ev = new EventReceptor(0,py+5,size/1.5);
+  double px = 5.0;
+  double py = 2.0;
+  double size = 22.0;
+  SCtrl::tft.fillRoundRect(px,py,size,size,3,TFT_DARKGREY);
+  SCtrl::drawCenteredText("<",py+5.0, px+((size-px)/2.0));
+  EVRcpt* ev = new EVRcpt(0,py+5,size/1.5);
   ev->onClick = [](){
-    Serial.print("IN ON CLICK OF BASE SCREEN (BACK BUTTON) ");
-    clearAllEventReceptors();
     Screens::goBack();    
   };
 }
